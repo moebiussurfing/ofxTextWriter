@@ -79,6 +79,7 @@ public:
     void setSeperateTimeToRender(float _timeToRender){
         resetTime();
 		timeToRender = _timeToRender;
+        fullTimeMode = false;
     }
 	
 	void setTextToRender(string _text) { text = _text; }
