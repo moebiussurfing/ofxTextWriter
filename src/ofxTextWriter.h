@@ -8,66 +8,82 @@
  */
 
 class ofxTextWriter {
+private:
 	string text;
 	float timeToRender;
 	float timeBegan;
 	bool  timeSet, done;
-	
+	bool fullTimeMode;
+    bool startRender;
 public:
 	
 	//for use if you just want a blank TextWriter, for whatever reason.
-	void init() {
-		text = "";
-		timeToRender = 0;
-		timeSet = done = false;
-	}
+	void init() { text = ""; }
 	
-	ofxTextWriter() {
+	ofxTextWriter():timeSet(false),done(false),fullTimeMode(false),startRender(false),timeToRender(0)
+    {
 		init();
 	}
 	
-	ofxTextWriter(string _text, float _timeToRender = 5) {
+	ofxTextWriter(string _text, float _timeToRender = 5):timeSet(false),done(false),fullTimeMode(false),startRender(false)
+    {
 		text = _text;
 		timeToRender= _timeToRender;
-		done = false;
 	}
 	
 	string whatToRender() {
-		if(!done) {
-			if(!timeSet) {
-				timeBegan = ofGetElapsedTimef();
-				timeSet = true;
-			} 
-			
-			//Lets not draw it, that's too many resources we dont have.
-			//Lets just return what part of the string should be already drawn.
-			//That way people can decide what they want to do with it and how.
-			int n = (int)((ofGetElapsedTimef() / (timeSet+timeToRender)) * text.length());
-			
-			if (n + 1 == (int)text.length() ) done = true;
-			
-			return text.substr(0, min( n, (int)text.length()) ); //lets not access outside the buffer, eh?
-		} else {
-			return text;
-		}
+        if (startRender) {
+            if(!done) {
+                static int n = 0;
+                if(!timeSet) {
+                    timeBegan = ofGetElapsedTimef();
+                    timeSet = true;
+                    n = 0;
+                }
+                
+                //Lets not draw it, that's too many resources we dont have.
+                //Lets just return what part of the string should be already drawn.
+                //That way people can decide what they want to do with it and how.
+                
+                if (!fullTimeMode) {
+                    if (ofGetElapsedTimef() - timeBegan >= timeToRender) {
+                        n++;
+                        timeBegan = ofGetElapsedTimef();
+                    }
+                }else{
+                    n = (int)(((ofGetElapsedTimef() - timeBegan) / (timeSet+timeToRender)) * text.length());
+                }
+                if (n + 1 == (int)text.length() ) done = true;
+                
+                return text.substr(0, min( n, (int)text.length()) ); //lets not access outside the buffer, eh?
+            } else {
+                return text;
+            }
+        }else{
+            return "";
+        }
 	}
 	
 	/* -------- HELPER FUNCTIONS --------- */
 	void resetTime() {
 		timeSet = false;
+        if (done) done = false;
 	}
 	
 	void setTimeToRender(float _timeToRender) {
 		resetTime();
 		timeToRender = _timeToRender;
-		done = false;
+        fullTimeMode = true;
 	}
+    
+    void setSeperateTimeToRender(float _timeToRender){
+        resetTime();
+		timeToRender = _timeToRender;
+    }
 	
-	void setTextToRender(string _text) {
-		text = _text;
-	}
+	void setTextToRender(string _text) { text = _text; }
+    
+    void start(){ startRender = true; }
 	
-	bool isDone() {
-		return done;
-	}
+	bool isDone() { return done; }
 };
