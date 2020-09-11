@@ -2,16 +2,22 @@
 
 //--------------------------------------------------------------
 void testApp::setup(){
+    ofSetFrameRate(30);
     n=0;
-    ofBackground(0,0,5);
+    ofBackground(0,0,0);
     ofTrueTypeFont::setGlobalDpi(72);
-    myFont.loadFont(OF_TTF_SANS, 18);
+    myFont.loadFont(OF_TTF_MONO, 30);
     
-    tr.setTimeToRender(2);
-    tr.setTextToRender("ofxTextWriter makes an oldschool kind of effect where it writes out text slowly, as if it was being typed.\nIt's cool.\n");
-    mt.setStageCycleTime(0.1);
-	mt.addStage(" ");
-	mt.addStage("_");
+
+    text="Use ofxTextWriter to get that classy typing feel for your apps.\n"
+    "See example for usage.\nBest accompanied by ofxMorphingText to add"
+    " that blinking cursorto the end.\n";
+
+    tr.setTextToRender(text);
+
+//    mt.setStageCycleTime(0.1);
+//    mt.addStage(" ");
+//    mt.addStage("_");
 }
 
 //--------------------------------------------------------------
@@ -21,17 +27,25 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
+//    string str = tr.whatToRender()+mt.whatToRender();
+    string str = tr.whatToRender();
 
-    ofSetColor(0, 255, 0);
-    myFont.drawString(tr.whatToRender()+mt.whatToRender(), 20, 40);
+    cout << str << endl;
+
+    ofSetColor(255, 255, 255);
+    myFont.drawString(str, 20, 40);
 }
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key){
-    if(n == 0){ tr.start(); n++;}
-    else{
-        tr.setSeperateTimeToRender(0.02);
-        tr.setTextToRender("Use ofxTextWriter to get that classy typing feel for your apps.\nSee example for usage.\nBest accompanied by ofxMorphingText to add that blinking cursorto the end.\n");
+//    if(n == 0){
+//        tr.start();
+//        n++;}
+//    else
+    {
+//        tr.setTimeToRender(15);
+        tr.setSeperateTimeToRender(0.08);
+        tr.setTextToRender(text);
         tr.resetTime();
         tr.start();
     }
@@ -55,13 +69,6 @@ void testApp::mouseDragged(int x, int y, int button){
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
 
-    if(n == 0){ tr.start(); n++;}
-    else{
-        tr.setSeperateTimeToRender(0.05);
-        tr.setTextToRender("Use ofxTextWriter to get that classy typing feel for your apps.\nSee example for usage.\nBest accompanied by ofxMorphingText to add that blinking cursorto the end.\n");
-        tr.resetTime();
-        tr.start();
-    }
 }
 
 //--------------------------------------------------------------

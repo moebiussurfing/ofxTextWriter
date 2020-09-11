@@ -2,7 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxTextWriter.h"
-#include "ofxMorphingText.h"
+//#include "ofxMorphingText.h"
 
 class testApp : public ofBaseApp{
     
@@ -23,7 +23,9 @@ public:
     
     ofTrueTypeFont  myFont;
     ofxTextWriter tr;
-    ofxMorphingText mt;
+//    ofxMorphingText mt;
+    string text;
+    
     int n;
     
 };
